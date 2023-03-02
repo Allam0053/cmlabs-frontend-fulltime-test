@@ -1,74 +1,8 @@
-# Next.js + Tailwind CSS + TypeScript Starter and Boilerplate
-
-<div align="center">
-  <h2>🔋 ts-nextjs-tailwind-starter</h2>
-  <p>Next.js + Tailwind CSS + TypeScript starter packed with useful development features.</p>
-  <p>Made by <a href="https://allam-taju.vercel.app">Theodorus Clarence</a></p>
-
-[![GitHub Repo stars](https://img.shields.io/github/stars/theodorusclarence/ts-nextjs-tailwind-starter)](https://github.com/allam0053/nextjs-starter/stargazers)
-[![Depfu](https://badges.depfu.com/badges/fc6e730632ab9dacaf7df478a08684a7/overview.svg)](https://depfu.com/github/theodorusclarence/ts-nextjs-tailwind-starter?project_id=30160)
-[![Last Update](https://img.shields.io/badge/deps%20update-every%20sunday-blue.svg)](https://shields.io/)
-
-</div>
-
-## Features
-
-This repository is 🔋 battery packed with:
-
-- ⚡️ Next.js 13
-- ⚛️ React 18
-- ✨ TypeScript
-- 💨 Tailwind CSS 3 — Configured with CSS Variables to extend the **primary** color
-- 💎 Pre-built Components — Components that will **automatically adapt** with your brand color, [check here for the demo](https://tsnext-tw.thcl.dev/components)
-- 🃏 Jest — Configured for unit testing
-- 📈 Absolute Import and Path Alias — Import components using `@/` prefix
-- 📏 ESLint — Find and fix problems in your code, also will **auto sort** your imports
-- 💖 Prettier — Format your code consistently
-- 🐶 Husky & Lint Staged — Run scripts on your staged files before they are committed
-- 🤖 Conventional Commit Lint — Make sure you & your teammates follow conventional commit
-- ⏰ Release Please — Generate your changelog by activating the `release-please` workflow
-- 👷 Github Actions — Lint your code on PR
-- 🚘 Automatic Branch and Issue Autolink — Branch will be automatically created on issue **assign**, and auto linked on PR
-- 🔥 Snippets — A collection of useful snippets
-- 👀 Default Open Graph — Awesome open graph generated using [og](https://github.com/theodorusclarence/og), fork it and deploy!
-- 🗺 Site Map — Automatically generate sitemap.xml
-- 📦 Expansion Pack — Easily install common libraries, additional components, and configs
-
-See the 👉 [feature details and changelog](https://github.com/allam0053/nextjs-starter/blob/main/CHANGELOG.md) 👈 for more.
-
-You can also check all of the **details and demos** on my blog post:
-
-- [One-stop Starter to Maximize Efficiency on Next.js & Tailwind CSS Projects](https://allam-taju.vercel.app/blog/one-stop-starter)
+# Recipes Website
 
 ## Getting Started
 
-### 1. Clone this template using one of the three ways
-
-1. Use this repository as template
-
-   **Disclosure:** by using this repository as a template, there will be an attribution on your repository.
-
-   I'll appreciate if you do, so this template can be known by others too 😄
-
-   ![Use as template](https://user-images.githubusercontent.com/55318172/129183039-1a61e68d-dd90-4548-9489-7b3ccbb35810.png)
-
-2. Using `create-next-app`
-
-   ```bash
-   npx create-next-app -e https://github.com/allam0053/nextjs-starter project-name
-   ```
-
-3. Using `degit`
-
-   ```bash
-   npx degit theodorusclarence/ts-nextjs-tailwind-starter YOUR_APP_NAME
-   ```
-
-4. Deploy to Vercel
-
-   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Ftheodorusclarence%2Fts-nextjs-tailwind-starter)
-
-### 2. Install dependencies
+### 1. Install dependencies
 
 It is encouraged to use **yarn** so the husky hooks can work properly.
 
@@ -76,7 +10,13 @@ It is encouraged to use **yarn** so the husky hooks can work properly.
 yarn install
 ```
 
-### 3. Run the development server
+or
+
+```bash
+npm install
+```
+
+### 2. Run the development server
 
 You can start the server using this command:
 
@@ -84,16 +24,48 @@ You can start the server using this command:
 yarn dev
 ```
 
+or
+
+```bash
+npm run dev
+```
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. You can start editing the page by modifying `src/pages/index.tsx`.
 
-### 4. Change defaults
+## Project
 
-There are some things you need to change including title, urls, favicons, etc.
+### API Endpoint
 
-Find all comments with !STARTERCONF, then follow the guide.
+| Name                 | URL                                                                                   | Type     |
+| -------------------- | ------------------------------------------------------------------------------------- | -------- |
+| List of Ingredients  | <http://www.themealdb.com/api/json/v1/1/list.php?i=list>                              | Required |
+| Filter by Ingredient | <http://www.themealdb.com/api/json/v1/1/filter.php?i=chicken_breast{ingredient-name>} | Required |
+| Detail Meal          | <http://www.themealdb.com/api/json/v1/1/lookup.php?i={meal-id>}                       | Optional |
 
-Don't forget to change the package name in package.json
+### Tasks
 
-### 5. Commit Message Convention
-
-This starter is using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/), it is mandatory to use it to commit changes.
+1. Silakan buat halaman dan tampilkan data berdasarkan API diatas
+   - **Halaman Ingredients** _Requirements:_
+2. Berisikan list data ingredients berdasarkan endpoint **_List of Ingredients_**
+3. Ketika list ingredient dipilih, halaman akan redirect menuju halaman **_Ingredients Detail_**
+4. Wajib ada fitur **_Search Ingredients by Name_** di sisi front-end
+5. Komponen: List Ingredients, Search Ingredients
+   - **Halaman Ingredients Detail** _Requirements:_
+6. Parameter → ingredient-name
+7. Berisikan list data meal berdasarkan data ingredient yang dipilih, endpoint dari **_Filter by Ingredients_**
+8. Jika data meal dipilih, halaman akan redirect menuju halaman **_Meals Detail_**
+9. Wajib ada fitur **_Search Meal by Name_** di sisi front-end
+10. Komponen: List meal dengan gambar, Search Meal
+    - **Meals Detail** (_Optional, jika dikerjakan akan menjadi nilai lebih_)
+11. Parameter → meal-id
+12. Tamplikan detail meal berdasarkan list yang dipilih
+13. Endpoint menggunakan **_Detail Meal_**
+14. Komponen: Gambar Meal, Judul/Nama Meal, Desksripsi/Tutorial, Recipe, Youtube Embedded
+15. Requirements
+    1. Wajib menggunakan framework **VueJS / ReactJS**
+    2. NuxtJS / NextJS menjadi nilai lebih
+    3. CSS, boleh pakai bootstrap / tailwind
+16. Silakan gunakan kreativitas anda untuk membuat dan menyusun halaman diatas (kualitas tampilan akan menjadi nilai lebih)
+17. Penggunaan atomic component lebih diutamakan
+18. Halaman Wajib Responsive
+19. (Opsional) Deploy hasil pengerjaan boleh ke Netlify, Vercel, Github pages

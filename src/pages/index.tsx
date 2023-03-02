@@ -1,11 +1,15 @@
+import _ from 'lodash';
 import * as React from 'react';
 
-import Layout from '@/components/layout/Layout';
-import ArrowLink from '@/components/links/ArrowLink';
-import ButtonLink from '@/components/links/ButtonLink';
+import { fetchAndHandleAllIngredients } from '@/lib/axios-request';
+import { imageUrlBuilder } from '@/lib/url-builder';
+
+import NextImage from '@/components/atomic/NextImage';
+import Seo from '@/components/atomic/Seo';
 import UnderlineLink from '@/components/links/UnderlineLink';
-import UnstyledLink from '@/components/links/UnstyledLink';
-import Seo from '@/components/Seo';
+import Layout from '@/components/organism/Layout';
+
+import { IngredientsWithImage } from '@/types/ingredients';
 
 /**
  * SVGR Support
@@ -14,13 +18,22 @@ import Seo from '@/components/Seo';
  * You can override the next-env if the type is important to you
  * @see https://stackoverflow.com/questions/68103844/how-to-override-next-js-svg-module-declaration
  */
-import Vercel from '~/svg/Vercel.svg';
 
 // !STARTERCONF -> Select !STARTERCONF and CMD + SHIFT + F
 // Before you begin editing, follow all comments with `STARTERCONF`,
 // to customize the default configuration.
 
-export default function HomePage() {
+export default function HomePage({
+  ingredientWithImages,
+}: {
+  ingredientWithImages: IngredientsWithImage;
+}) {
+  // const urlMealList = urlSearchBuilder(
+  //   LIST_INGREDIENTS,
+  //   LIST_INGREDIENTS_SEARCH_PARAMS
+  // );
+  // const { data, error, loading } = useSWRRecipes(urlMealList.toString());
+
   return (
     <Layout>
       {/* <Seo templateTitle='Home' /> */}
@@ -29,36 +42,25 @@ export default function HomePage() {
       <main>
         <section className='bg-white'>
           <div className='layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center'>
-            <Vercel className='text-5xl' />
-            <h1 className='mt-4'>
-              Next.js + Tailwind CSS + TypeScript Starter
-            </h1>
-            <p className='mt-2 text-sm text-gray-800'>
-              A starter for Next.js, Tailwind CSS, and TypeScript with Absolute
-              Import, Seo, Link component, pre-configured with Husky{' '}
-            </p>
-            <p className='mt-2 text-sm text-gray-700'>
-              <ArrowLink href='https://github.com/allam0053/nextjs-starter'>
-                See the repository
-              </ArrowLink>
-            </p>
-
-            <ButtonLink className='mt-6' href='/components' variant='light'>
-              See all components
-            </ButtonLink>
-
-            <UnstyledLink
-              href='https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Ftheodorusclarence%2Fts-nextjs-tailwind-starter'
-              className='mt-4'
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                width='92'
-                height='32'
-                src='https://vercel.com/button'
-                alt='Deploy with Vercel'
-              />
-            </UnstyledLink>
+            {ingredientWithImages.map((value, index) => (
+              <li key={`${value.ingredient.idIngredient}_${index}`}>
+                <p>{value.ingredient.idIngredient}</p>
+                <p>{value.ingredient.strIngredient}</p>
+                <p>{value.ingredient.strDescription}</p>
+                <p>{value.ingredient.strType}</p>
+                <NextImage
+                  // className='w-32'
+                  // useSkeleton
+                  width={128}
+                  height={128}
+                  alt={
+                    value.ingredient.strDescription ??
+                    value.ingredient.idIngredient
+                  }
+                  src={value.image}
+                />
+              </li>
+            ))}
 
             <footer className='absolute bottom-2 text-gray-700'>
               © {new Date().getFullYear()} By{' '}
@@ -71,4 +73,21 @@ export default function HomePage() {
       </main>
     </Layout>
   );
+}
+
+export async function getStaticProps() {
+  const response = await fetchAndHandleAllIngredients();
+  const ingredientWithImages: IngredientsWithImage = [];
+  if (200 <= response.status && response.status < 300) {
+    for (let i = 0; i < response.data.meals.length; i++) {
+      ingredientWithImages.push({
+        ingredient: response.data?.meals?.[i],
+        image: imageUrlBuilder(
+          _.get(response, `data.meals[${i}].strIngredient`, '')
+        ).toString(),
+      });
+    }
+  }
+  return { props: { ingredientWithImages }, revalidate: 30 };
+  // const imageLinks = ingredients.map() imageUrlBuilder();
 }
