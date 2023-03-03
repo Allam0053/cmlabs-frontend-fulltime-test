@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import {
+  exactMatchSubstring,
   generateCache,
   getInputValueCastToArray,
   searchFunctionForReference,
@@ -25,17 +26,23 @@ import Layout from '@/components/organism/Layout';
 // Before you begin editing, follow all comments with `STARTERCONF`,
 // to customize the default configuration.
 
+// exact = WiLunarEclipse
+// fast = BsFillLightningChargeFill
+// detail = TbZoomCheckFilled
 export default function HomePage() {
-  const { data: ingredientWithImages } = useFetchIngredient();
-  const [isFastSearch, setIsFastSearch] = React.useState(false);
+  const { data } = useFetchIngredient();
+  const [searchMethod, setSearchMethod] = React.useState<
+    'fast' | 'detail' | 'exact'
+  >('exact');
+  const path = React.useMemo(() => 'ingredient.strIngredient', []);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = React.useState<string[]>([]);
 
   const fastSearchCache = React.useMemo(() => {
-    const cacheSearch = generateCache(ingredientWithImages);
+    const cacheSearch = generateCache(data, path);
     return cacheSearch;
-  }, [ingredientWithImages]);
+  }, [data, path]);
 
   const getCache = React.useMemo(() => {
     return fastSearchCache.get(searchTerm[0]);
@@ -51,16 +58,18 @@ export default function HomePage() {
   }, []);
 
   // filter data
-  const processedIngredients = React.useMemo(() => {
-    if (searchTerm.length === 0) return ingredientWithImages;
-    if (isFastSearch) return getCache;
-    return searchFunctionForReference(ingredientWithImages, searchTerm);
-  }, [getCache, ingredientWithImages, isFastSearch, searchTerm]);
+  const processedData = React.useMemo(() => {
+    if (searchTerm.length === 0) return data;
+    if (searchMethod === 'fast') return getCache;
+    if (searchMethod === 'detail')
+      return searchFunctionForReference(data, searchTerm, path);
+    return exactMatchSubstring(data, searchTerm, path);
+  }, [searchTerm, data, searchMethod, getCache, path]);
 
   // React.useEffect(() => {
   //   // eslint-disable-next-line no-console
-  //   console.log(processedIngredients);
-  // }, [processedIngredients]);
+  //   console.log(processedData);
+  // }, [processedData]);
 
   return (
     <Layout>
@@ -73,26 +82,35 @@ export default function HomePage() {
             <input ref={inputRef} type='text' />
             <input
               type='radio'
-              name='fastSearch'
+              name='searchMethod'
               value='fast'
-              onChange={(e) => {
-                setIsFastSearch(e.target.value === 'fast' ? true : false);
+              onChange={() => {
+                setSearchMethod('fast');
               }}
             />
             <input
               type='radio'
-              name='fastSearch'
+              name='searchMethod'
               value='detail'
-              onChange={(e) => {
-                setIsFastSearch(e.target.value === 'detail' ? true : false);
+              onChange={() => {
+                setSearchMethod('detail');
+              }}
+            />
+
+            <input
+              type='radio'
+              name='searchMethod'
+              value='detail'
+              onChange={() => {
+                setSearchMethod('exact');
               }}
             />
             <button type='submit'>search</button>
           </form>
           <div className='layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center'>
             <ul>
-              {processedIngredients &&
-                processedIngredients.map((value, index) => (
+              {processedData &&
+                processedData.map((value, index) => (
                   <li
                     key={`${value.ingredient.idIngredient}_${index}`}
                     data-testid={`${value.ingredient.idIngredient}_${index}`}

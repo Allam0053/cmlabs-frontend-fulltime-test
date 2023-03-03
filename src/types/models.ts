@@ -1,16 +1,3 @@
-export type ResponseIngredientsList = {
-  meals: Ingredient[];
-};
-
-export type IngredientsWithImage = { ingredient: Ingredient; image: string }[];
-
-export type Ingredient = {
-  idIngredient: string;
-  strIngredient: NullableString;
-  strDescription: NullableString;
-  strType: NullableString;
-};
-
 export type NullableStringIntersect = string | undefined | null;
 
 export type Prettify<T> = {
@@ -18,6 +5,14 @@ export type Prettify<T> = {
 };
 
 export type NullableString = Prettify<NullableStringIntersect>;
+
+export type Ingredient = {
+  idIngredient: string;
+  strIngredient: NullableString;
+  strDescription: NullableString;
+  strType: NullableString;
+};
+export type IngredientsWithImage = { ingredient: Ingredient; image: string }[];
 
 export type Meal = {
   idMeal: string;
@@ -73,8 +68,4 @@ export type Meal = {
   strImageSource: NullableString;
   strCreativeCommonsConfirmed: NullableString;
   dateModified: NullableString;
-};
-
-export type ResponseMealLookupType = {
-  meals: Meal[];
 };

@@ -12,7 +12,7 @@ import Layout from '@/components/organism/Layout';
 
 import { DETAIL_MEAL } from '@/services/endpoints';
 
-import { Meal } from '@/types/ingredients';
+import { Meal } from '@/types/models';
 
 export default function MealDetailPage({ meal }: { meal: Meal }) {
   const router = useRouter();

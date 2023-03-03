@@ -5,6 +5,7 @@ import '@/styles/globals.css';
 import '@/styles/colors.css';
 
 import { IngredientStateProvider } from '@/hooks/useIngredient';
+import { MealStateProvider } from '@/hooks/useMeal';
 
 /**
  * !STARTERCONF info
@@ -14,7 +15,9 @@ import { IngredientStateProvider } from '@/hooks/useIngredient';
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <IngredientStateProvider>
-      <Component {...pageProps} />
+      <MealStateProvider>
+        <Component {...pageProps} />
+      </MealStateProvider>
     </IngredientStateProvider>
   );
 }

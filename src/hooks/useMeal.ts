@@ -3,7 +3,7 @@ import { useContext } from 'react';
 
 import { createStateContext } from '@/hooks/useGlobalReducer';
 
-import { Meal } from '@/types/ingredients';
+import { Meal } from '@/types/models';
 
 export type MealActionType =
   | // create new, clear all

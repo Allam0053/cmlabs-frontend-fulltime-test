@@ -1,5 +1,6 @@
 import Image, { ImageProps } from 'next/image';
 import * as React from 'react';
+import { BsQuestionSquareFill } from 'react-icons/bs';
 
 import clsxm from '@/lib/clsxm';
 
@@ -35,23 +36,38 @@ export default function NextImage({
   );
   const widthIsSet = className?.includes('w-') ?? false;
 
+  const [imageError, setImageError] = React.useState(false);
+
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   return (
     <figure
       style={!widthIsSet ? { width: `${width}px` } : undefined}
       className={className}
     >
-      <Image
-        className={clsxm(
-          imgClassName,
-          status === 'loading' && clsxm('animate-pulse', blurClassName)
-        )}
-        src={src}
-        width={width}
-        height={height}
-        alt={alt}
-        onLoadingComplete={() => setStatus('complete')}
-        {...rest}
-      />
+      {!imageError ? (
+        <Image
+          className={clsxm(
+            imgClassName,
+            status === 'loading' && clsxm('animate-pulse', blurClassName)
+          )}
+          src={src}
+          width={width}
+          height={height}
+          alt={alt}
+          onLoadingComplete={() => setStatus('complete')}
+          onError={handleImageError}
+          {...rest}
+        />
+      ) : (
+        <BsQuestionSquareFill
+          className={clsxm(imgClassName)}
+          width={width}
+          height={height}
+        />
+      )}
     </figure>
   );
 }

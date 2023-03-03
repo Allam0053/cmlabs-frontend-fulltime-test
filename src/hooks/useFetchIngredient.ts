@@ -14,10 +14,13 @@ import {
   LIST_INGREDIENTS_SEARCH_PARAMS,
 } from '@/services/endpoints';
 
-import {
-  IngredientsWithImage,
-  ResponseIngredientsList,
-} from '@/types/ingredients';
+import { IngredientsWithImage } from '@/types/models';
+import { ResponseIngredientsList } from '@/types/responses';
+
+/**
+ * Fetch and Store to Global Reducer
+ * @returns
+ */
 export default function useFetchIngredient() {
   const [status, setStatus] = React.useState<'loading' | 'success' | 'error'>(
     'loading'

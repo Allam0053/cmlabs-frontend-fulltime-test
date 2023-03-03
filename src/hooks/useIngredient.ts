@@ -2,7 +2,7 @@ import { useContext } from 'react';
 
 import { createStateContext } from '@/hooks/useGlobalState';
 
-import { IngredientsWithImage } from '@/types/ingredients';
+import { IngredientsWithImage } from '@/types/models';
 
 type IngredientStateType = IngredientsWithImage;
 

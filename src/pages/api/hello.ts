@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { fetchAndHandleAllIngredients } from '@/lib/axios-request';
 import { imageUrlBuilder } from '@/lib/url-builder';
 
-import { IngredientsWithImage } from '@/types/ingredients';
+import { IngredientsWithImage } from '@/types/models';
 
 export default async function hello(req: NextApiRequest, res: NextApiResponse) {
   const response = await fetchAndHandleAllIngredients();
