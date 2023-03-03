@@ -1,12 +1,16 @@
-import _ from 'lodash';
 import * as React from 'react';
 
-import { getInputValueCastToArray } from '@/lib/search-string';
+import {
+  generateCache,
+  getInputValueCastToArray,
+  searchFunctionForReference,
+} from '@/lib/search-string';
 import useFetchIngredient from '@/hooks/useFetchIngredient';
 
 import NextImage from '@/components/atomic/NextImage';
 import Seo from '@/components/atomic/Seo';
 import UnderlineLink from '@/components/links/UnderlineLink';
+import UnstyledLink from '@/components/links/UnstyledLink';
 import Layout from '@/components/organism/Layout';
 
 /**
@@ -23,9 +27,19 @@ import Layout from '@/components/organism/Layout';
 
 export default function HomePage() {
   const { data: ingredientWithImages } = useFetchIngredient();
+  const [isFastSearch, setIsFastSearch] = React.useState(false);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = React.useState<string[]>([]);
+
+  const fastSearchCache = React.useMemo(() => {
+    const cacheSearch = generateCache(ingredientWithImages);
+    return cacheSearch;
+  }, [ingredientWithImages]);
+
+  const getCache = React.useMemo(() => {
+    return fastSearchCache.get(searchTerm[0]);
+  }, [fastSearchCache, searchTerm]);
 
   // collect the search terms
   const onSubmitHandler = React.useCallback<
@@ -39,19 +53,14 @@ export default function HomePage() {
   // filter data
   const processedIngredients = React.useMemo(() => {
     if (searchTerm.length === 0) return ingredientWithImages;
-    return ingredientWithImages.filter((value) => {
-      const mealName = _.get(value, 'ingredient.strMeal', '|'); // dont include empty names
-      mealName
-        .split(/[^a-zA-Z0-9]+/)
-        .filter(Boolean)
-        .filter((value) => searchTerm.includes(value));
-    });
-  }, [ingredientWithImages, searchTerm]);
+    if (isFastSearch) return getCache;
+    return searchFunctionForReference(ingredientWithImages, searchTerm);
+  }, [getCache, ingredientWithImages, isFastSearch, searchTerm]);
 
-  React.useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(processedIngredients);
-  }, [processedIngredients]);
+  // React.useEffect(() => {
+  //   // eslint-disable-next-line no-console
+  //   console.log(processedIngredients);
+  // }, [processedIngredients]);
 
   return (
     <Layout>
@@ -62,30 +71,56 @@ export default function HomePage() {
         <section className='flex flex-col bg-white'>
           <form onSubmit={onSubmitHandler}>
             <input ref={inputRef} type='text' />
+            <input
+              type='radio'
+              name='fastSearch'
+              value='fast'
+              onChange={(e) => {
+                setIsFastSearch(e.target.value === 'fast' ? true : false);
+              }}
+            />
+            <input
+              type='radio'
+              name='fastSearch'
+              value='detail'
+              onChange={(e) => {
+                setIsFastSearch(e.target.value === 'detail' ? true : false);
+              }}
+            />
             <button type='submit'>search</button>
           </form>
           <div className='layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center'>
             <ul>
-              {processedIngredients.map((value, index) => (
-                <li
-                  key={`${value.ingredient.idIngredient}_${index}`}
-                  data-testid={`${value.ingredient.idIngredient}_${index}`}
-                >
-                  <p>{value.ingredient.idIngredient}</p>
-                  <p>{value.ingredient.strIngredient}</p>
-                  <p>{value.ingredient.strDescription}</p>
-                  <p>{value.ingredient.strType}</p>
-                  <NextImage
-                    // className='w-32'
-                    imgClassName='hover:scale-[120]'
-                    useSkeleton
-                    width={128}
-                    height={128}
-                    alt={value.ingredient.idIngredient}
-                    src={value.image}
-                  />
-                </li>
-              ))}
+              {processedIngredients &&
+                processedIngredients.map((value, index) => (
+                  <li
+                    key={`${value.ingredient.idIngredient}_${index}`}
+                    data-testid={`${value.ingredient.idIngredient}_${index}`}
+                  >
+                    <p>{value.ingredient.idIngredient}</p>
+                    <p>{value.ingredient.strIngredient}</p>
+                    <p>{value.ingredient.strDescription}</p>
+                    <p>{value.ingredient.strType}</p>
+                    <UnstyledLink
+                      href={`/ingredient/${value.ingredient.strIngredient}`}
+                    >
+                      <NextImage
+                        useSkeleton
+                        loading='lazy'
+                        className='w-32 md:w-40'
+                        src={value.image}
+                        width='180'
+                        height='180'
+                        alt={
+                          value.ingredient.strIngredient === null ||
+                          value.ingredient.strIngredient === undefined
+                            ? value.ingredient.idIngredient
+                            : value.ingredient.strIngredient
+                        }
+                      />
+                    </UnstyledLink>
+                  </li>
+                ))}
             </ul>
 
             <footer className='absolute bottom-2 text-gray-700'>

@@ -12,6 +12,15 @@ const nextConfig = {
     domains: ['res.cloudinary.com', 'www.themealdb.com'],
   },
 
+  rewrites() {
+    return [
+      {
+        source: '/be/:path*',
+        destination: `https://www.themealdb.com/:path*`,
+      },
+    ];
+  },
+
   // SVGR
   webpack(config) {
     config.module.rules.push({
