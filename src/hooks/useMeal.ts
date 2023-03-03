@@ -1,3 +1,4 @@
+import lodashUniqBy from 'lodash/uniqBy';
 import { useContext } from 'react';
 
 import { createStateContext } from '@/hooks/useGlobalReducer';
@@ -25,7 +26,8 @@ export function mealReducer(state: MealStateType, action: MealActionType) {
     case 'PUSH': {
       const Meals = new Array(...state);
       Meals.push(...action.payload);
-      return Meals;
+      const uniqueMeals = lodashUniqBy(Meals, 'idMeal');
+      return uniqueMeals;
     }
   }
 }

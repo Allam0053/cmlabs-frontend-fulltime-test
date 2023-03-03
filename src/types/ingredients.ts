@@ -1,5 +1,5 @@
 export type ResponseIngredientsList = {
-  ingredient: Ingredient[];
+  meals: Ingredient[];
 };
 
 export type IngredientsWithImage = { ingredient: Ingredient; image: string }[];
