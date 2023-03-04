@@ -11,7 +11,6 @@ export function getInputValueCastToArray(
 
 // time complexity too high O(ingredientLen * mealNameSplitted * searchTermSplitted)
 // good for searching uncertain reference
-// 'ingredient.strIngredient'
 export function searchFunctionForReference<T>(
   data: T[],
   searchTerm: string[],
@@ -21,11 +20,11 @@ export function searchFunctionForReference<T>(
     const itemToSearch = _.get(value, path, '|'); // dont include empty names
     // console.log(itemToSearch);
     const score = (itemToSearch as string)
-      .toLowerCase()
-      .split(/[^a-z0-9]+/)
-      .filter(Boolean)
-      .filter((value) =>
-        searchTerm.some((term) => value.includes(term))
+      .toLowerCase() // Os( N )
+      .split(/[^a-z0-9]+/) // Os( N )
+      .filter(Boolean) // Os( N )
+      .filter(
+        (value) => searchTerm.some((term) => value.includes(term)) // Os( N ) some and includes require Os( 1 )
       ).length;
     return {
       data: value,

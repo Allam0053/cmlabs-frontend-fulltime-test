@@ -18,6 +18,7 @@ import { IngredientsWithImage } from '@/types/models';
 import { ResponseIngredientsList } from '@/types/responses';
 
 /**
+ * For `home page`
  * Fetch and Store to Global Reducer
  * @returns
  */

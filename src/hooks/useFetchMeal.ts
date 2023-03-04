@@ -10,6 +10,7 @@ import { FILTER_INGREDIENTS } from '@/services/endpoints';
 import { ResponseFilterMealType } from '@/types/responses';
 
 /**
+ * for `/ingredient/{ingredientName}`
  * Fetch and Store to Global Reducer
  * @returns
  */

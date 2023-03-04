@@ -11,3 +11,7 @@ export type ResponseMealLookupType = {
 export type ResponseFilterMealType = {
   meals: Meal[];
 };
+
+export type ResponseMealCountByIngredient = {
+  mealCount: number;
+};

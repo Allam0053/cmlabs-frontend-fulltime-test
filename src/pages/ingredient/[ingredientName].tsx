@@ -1,14 +1,20 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-
 import {
-  exactMatchSubstring,
-  generateCache,
-  getInputValueCastToArray,
-  searchFunctionForReference,
-} from '@/lib/search-string';
-import useFetchMeal from '@/hooks/useFetchMeal';
+  BsArrowLeftShort,
+  BsArrowRightShort,
+  BsChevronDoubleLeft,
+  BsChevronDoubleRight,
+} from 'react-icons/bs';
 
+import useFetchMeal from '@/hooks/useFetchMeal';
+import usePagination from '@/hooks/usePagination';
+import useSearch from '@/hooks/useSearch';
+
+import BoldText from '@/components/atomic/BoldText';
+import Button from '@/components/atomic/buttons/Button';
+import ButtonGroup from '@/components/atomic/buttons/ButtonGroup';
+import IconButton from '@/components/atomic/buttons/IconButton';
 import NextImage from '@/components/atomic/NextImage';
 import Seo from '@/components/atomic/Seo';
 import UnderlineLink from '@/components/links/UnderlineLink';
@@ -20,40 +26,21 @@ export default function MealsByIngredientPage() {
   const { ingredientName } = router.query;
   const { data } = useFetchMeal(ingredientName?.toString());
 
-  const [searchMethod, setSearchMethod] = React.useState<
-    'fast' | 'detail' | 'exact'
-  >('exact');
-  const path = React.useMemo(() => 'strMeal', []);
+  const {
+    // searchMethod,
+    setSearchMethod,
+    // path,
+    inputRef,
+    searchTerm,
+    // setSearchTerm,
+    // fastSearchCache,
+    // getCache,
+    onSubmitHandler,
+    processedData,
+  } = useSearch(data);
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
-  const [searchTerm, setSearchTerm] = React.useState<string[]>([]);
-
-  const fastSearchCache = React.useMemo(() => {
-    const cacheSearch = generateCache(data, path);
-    return cacheSearch;
-  }, [data, path]);
-
-  const getCache = React.useMemo(() => {
-    return fastSearchCache.get(searchTerm[0]);
-  }, [fastSearchCache, searchTerm]);
-
-  // collect the search terms
-  const onSubmitHandler = React.useCallback<
-    React.FormEventHandler<HTMLFormElement>
-  >((e) => {
-    e.preventDefault();
-    const getInputValues = getInputValueCastToArray(inputRef);
-    setSearchTerm(getInputValues);
-  }, []);
-
-  // filter data
-  const processedData = React.useMemo(() => {
-    if (searchTerm.length === 0) return data;
-    if (searchMethod === 'fast') return getCache;
-    if (searchMethod === 'detail')
-      return searchFunctionForReference(data, searchTerm, path);
-    return exactMatchSubstring(data, searchTerm, path);
-  }, [searchTerm, data, searchMethod, getCache, path]);
+  const { pagination, currentPage, setCurrentPage } =
+    usePagination(processedData);
 
   return (
     <Layout>
@@ -90,14 +77,65 @@ export default function MealsByIngredientPage() {
               />
               <button type='submit'>search</button>
             </form>
+            <div>
+              <p>{JSON.stringify(pagination.pagesToRender)}</p>
+              <p>{JSON.stringify(pagination.totalData)}</p>
+              <p>{JSON.stringify(pagination.totalPage)}</p>
+              <p>{JSON.stringify(pagination.dataPerPage)}</p>
+              {/* <p>{JSON.stringify(pagination.currentData)}</p> */}
+            </div>
+            <ButtonGroup className='flex items-center justify-center'>
+              <IconButton
+                variant='ghost'
+                icon={BsChevronDoubleLeft}
+                iconClassName='h-4 w-4'
+                onClick={() => setCurrentPage(1)}
+              />
+              <IconButton
+                variant='ghost'
+                icon={BsArrowLeftShort}
+                iconClassName='h-4 w-4'
+                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              />
+              {pagination.pagesToRender &&
+                pagination.pagesToRender.map((value, index) => (
+                  <Button
+                    variant={currentPage === value ? 'outline' : 'ghost'}
+                    disabled={currentPage === value}
+                    key={`${index}-${value}-pagination`}
+                    onClick={() => setCurrentPage(value)}
+                  >
+                    {value}
+                  </Button>
+                ))}
+              <IconButton
+                variant='ghost'
+                icon={BsArrowRightShort}
+                iconClassName='h-4 w-4'
+                onClick={() =>
+                  setCurrentPage((prev) =>
+                    Math.min(pagination.totalPage ?? 1, prev + 1)
+                  )
+                }
+              />
+              <IconButton
+                variant='ghost'
+                icon={BsChevronDoubleRight}
+                iconClassName='h-4 w-4'
+                onClick={() => setCurrentPage(pagination.totalPage)}
+              />
+            </ButtonGroup>
             <ul>
-              {processedData &&
-                processedData.map((value, index) => (
+              {pagination.currentData &&
+                pagination.currentData.map((value, index) => (
                   <li
                     key={`${value.idMeal}_${index}`}
                     data-testid={`${value.idMeal}_${index}`}
                   >
-                    <p>{value.strMeal}</p>
+                    <BoldText
+                      text={value.strMeal ?? ''}
+                      keywords={searchTerm}
+                    ></BoldText>
                     <UnstyledLink href={`/meal/${value.idMeal}`}>
                       <NextImage
                         useSkeleton
