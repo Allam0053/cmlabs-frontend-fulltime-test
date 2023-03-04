@@ -16,6 +16,7 @@ type ButtonProps = {
   rightIcon?: IconType;
   leftIconClassName?: string;
   rightIconClassName?: string;
+  positionInGroup?: string;
 } & React.ComponentPropsWithRef<'button'>;
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -32,11 +33,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon: RightIcon,
       leftIconClassName,
       rightIconClassName,
+      positionInGroup,
       ...rest
     },
     ref
   ) => {
     const disabled = isLoading || buttonDisabled;
+    positionInGroup; // unhandled
 
     return (
       <button
