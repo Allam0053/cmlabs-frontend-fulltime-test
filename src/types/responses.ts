@@ -15,3 +15,8 @@ export type ResponseFilterMealType = {
 export type ResponseMealCountByIngredient = {
   mealCount: number;
 };
+
+export type ResponseStats = {
+  ingredients: number;
+  meals: number;
+};

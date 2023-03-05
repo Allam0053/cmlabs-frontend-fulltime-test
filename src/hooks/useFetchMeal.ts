@@ -34,7 +34,13 @@ export default function useFetchMeal(ingredientNameInit?: string) {
 
     fetcherGet<ResponseFilterMealType>(urlMealByIngredient.toString())
       .then((res) => {
+        if (!res.data.meals) {
+          // saat tidak ada meal yang cocok dengan ingredient
+          setStatus('success');
+          return;
+        }
         if (data.length === 0) {
+          // saat pertama kali init reducer data
           disptachData({
             type: 'NEW',
             payload: res.data.meals,

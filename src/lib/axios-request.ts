@@ -8,13 +8,16 @@ import {
   FILTER_INGREDIENTS_SERVER,
   LIST_INGREDIENTS,
   LIST_INGREDIENTS_SEARCH_PARAMS,
+  LIST_INGREDIENTS_SERVER,
   MEAL_COUNT_BY_CATEGORY,
+  STATS,
 } from '@/services/endpoints';
 
 import {
   ResponseFilterMealType,
   ResponseIngredientsList,
   ResponseMealLookupType,
+  ResponseStats,
 } from '@/types/responses';
 
 /**
@@ -33,6 +36,45 @@ export function fetcherGet<T>(url: string, abortSignal?: AbortSignal) {
   });
 }
 
+/**
+ * for SERVER API, count all ingredient and send the result to client
+ * @returns
+ */
+export async function fetchAndHandleAllIngredients_() {
+  const urlIngredientList = urlSearchBuilder(
+    LIST_INGREDIENTS_SERVER,
+    LIST_INGREDIENTS_SEARCH_PARAMS
+  );
+  const res = await fetcherGet<ResponseIngredientsList>(
+    urlIngredientList.toString()
+  )
+    .then((res) => {
+      return {
+        data: res.data,
+        status: res.status,
+      };
+    })
+    .catch((err) => {
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        return {
+          data: err.response.data,
+          status: err.response.status,
+        };
+      }
+      return {
+        data: undefined,
+        status: 0,
+      };
+    });
+  return res;
+}
+
+/**
+ * for CLIENT, request all available ingredients
+ * @returns
+ */
 export async function fetchAndHandleAllIngredients() {
   const urlIngredientList = urlSearchBuilder(
     LIST_INGREDIENTS,
@@ -137,6 +179,7 @@ export async function fetchMealCount(
   return res;
 }
 
+// for CLIENT, request Meals By Ingredient
 export async function fetchAndHandleByIngredient(ingredientName: string) {
   const urlMealByIngredient = urlSearchBuilder(
     FILTER_INGREDIENTS,
@@ -174,6 +217,33 @@ export async function fetchAndHandleMealDetail(mealId: string) {
     new Map([['i', mealId]])
   );
   const res = await fetcherGet<ResponseMealLookupType>(urlMealDetail.toString())
+    .then((res) => {
+      return {
+        data: res.data,
+        status: res.status,
+      };
+    })
+    .catch((err) => {
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        return {
+          data: err.response.data,
+          status: err.response.status,
+        };
+      }
+      return {
+        data: undefined,
+        status: 0,
+      };
+    });
+  return res;
+}
+
+// for CLIENT, request STATS for server side props on Home page
+export async function fetchAndHandleStats() {
+  const urlMealByIngredient = STATS;
+  const res = await fetcherGet<ResponseStats>(urlMealByIngredient.toString())
     .then((res) => {
       return {
         data: res.data,

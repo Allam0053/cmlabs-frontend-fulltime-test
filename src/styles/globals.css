@@ -90,6 +90,18 @@
   .min-h-main {
     @apply min-h-[calc(100vh-56px)];
   }
+
+  .my-green {
+    @apply from-green-400 to-cyan-500;
+  }
+
+  .my-purple {
+    @apply from-purple-500 to-indigo-500;
+  }
+
+  .my-orange {
+    @apply from-orange-400 to-pink-600;
+  }
 }
 
 @layer utilities {

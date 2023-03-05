@@ -1,4 +1,8 @@
+export const STATS = '/api/stats-sum';
+
 export const LIST_INGREDIENTS = '/be/api/json/v1/1/list.php'; // rewrites, for client
+export const LIST_INGREDIENTS_SERVER =
+  'https://www.themealdb.com/api/json/v1/1/list.php'; // no rewrites, for server
 export const LIST_INGREDIENTS_SEARCH_PARAMS = new Map([['i', 'list']]);
 
 export const FILTER_INGREDIENTS = '/be/api/json/v1/1/filter.php'; // rewrites, for client

@@ -1,3 +1,5 @@
+import clsxm from '@/lib/clsxm';
+
 export interface BoldTextProps {
   text: string;
   keywords: string[];
@@ -12,11 +14,11 @@ export default function BoldText(props: BoldTextProps) {
       {parts.map((part, i) => (
         <span
           key={i}
-          style={
+          className={clsxm(
             keywords.some((kw) => part.toLowerCase() === kw.toLowerCase())
-              ? { fontWeight: 'bold' }
-              : undefined
-          }
+              ? 'bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500'
+              : ''
+          )}
         >
           {part}
         </span>
