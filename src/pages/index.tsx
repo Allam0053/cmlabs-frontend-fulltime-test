@@ -85,7 +85,15 @@ export default function HomePage({
   return (
     <Layout>
       {/* <Seo templateTitle='Home' /> */}
-      <Seo />
+      <Seo
+        templateTitle='Welcome Recipes Hunter'
+        description={`Our website is organized around a comprehensive ingredient
+                      database, which allows you to search for recipes based on
+                      specific ingredients. Simply enter the ingredient you're
+                      looking for, and our platform will provide you with a
+                      variety of recipe options that feature that ingredient.`}
+        date={new Date('05/03/2023').toISOString()}
+      />
 
       <main className='flex h-full w-full flex-col items-center'>
         <section id='hero-section' className='w-full'>

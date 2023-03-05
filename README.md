@@ -4,6 +4,8 @@
 
 ### 1. Install dependencies
 
+tested in Node.js v18.12.1
+
 It is encouraged to use **yarn** so the husky hooks can work properly.
 
 ```bash
@@ -46,26 +48,26 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 1. Silakan buat halaman dan tampilkan data berdasarkan API diatas
    - **Halaman Ingredients** _Requirements:_
-2. Berisikan list data ingredients berdasarkan endpoint **_List of Ingredients_**
-3. Ketika list ingredient dipilih, halaman akan redirect menuju halaman **_Ingredients Detail_**
-4. Wajib ada fitur **_Search Ingredients by Name_** di sisi front-end
-5. Komponen: List Ingredients, Search Ingredients
+2. (v) Berisikan list data ingredients berdasarkan endpoint **_List of Ingredients_**
+3. (v) Ketika list ingredient dipilih, halaman akan redirect menuju halaman **_Ingredients Detail_**
+4. (v) ('05/03/2023') Wajib ada fitur **_Search Ingredients by Name_** di sisi front-end
+5. (v) Komponen: List Ingredients, Search Ingredients
    - **Halaman Ingredients Detail** _Requirements:_
-6. Parameter → ingredient-name
-7. Berisikan list data meal berdasarkan data ingredient yang dipilih, endpoint dari **_Filter by Ingredients_**
-8. Jika data meal dipilih, halaman akan redirect menuju halaman **_Meals Detail_**
-9. Wajib ada fitur **_Search Meal by Name_** di sisi front-end
-10. Komponen: List meal dengan gambar, Search Meal
+6. (v) Parameter → ingredient-name
+7. (v) Berisikan list data meal berdasarkan data ingredient yang dipilih, endpoint dari **_Filter by Ingredients_**
+8. (v) Jika data meal dipilih, halaman akan redirect menuju halaman **_Meals Detail_**
+9. (v) Wajib ada fitur **_Search Meal by Name_** di sisi front-end
+10. (v) Komponen: List meal dengan gambar, Search Meal
     - **Meals Detail** (_Optional, jika dikerjakan akan menjadi nilai lebih_)
-11. Parameter → meal-id
-12. Tamplikan detail meal berdasarkan list yang dipilih
-13. Endpoint menggunakan **_Detail Meal_**
-14. Komponen: Gambar Meal, Judul/Nama Meal, Desksripsi/Tutorial, Recipe, Youtube Embedded
-15. Requirements
+11. (v) Parameter → meal-id
+12. (v) Tamplikan detail meal berdasarkan list yang dipilih
+13. (v) Endpoint menggunakan **_Detail Meal_**
+14. (v) Komponen: Gambar Meal, Judul/Nama Meal, Desksripsi/Tutorial, Recipe, Youtube Embedded
+15. (v) Requirements
     1. Wajib menggunakan framework **VueJS / ReactJS**
     2. NuxtJS / NextJS menjadi nilai lebih
     3. CSS, boleh pakai bootstrap / tailwind
-16. Silakan gunakan kreativitas anda untuk membuat dan menyusun halaman diatas (kualitas tampilan akan menjadi nilai lebih)
-17. Penggunaan atomic component lebih diutamakan
-18. Halaman Wajib Responsive
-19. (Opsional) Deploy hasil pengerjaan boleh ke Netlify, Vercel, Github pages
+16. (v) Silakan gunakan kreativitas anda untuk membuat dan menyusun halaman diatas (kualitas tampilan akan menjadi nilai lebih)
+17. (v) Penggunaan atomic component lebih diutamakan
+18. (v) Halaman Wajib Responsive
+19. (v) (Opsional) Deploy hasil pengerjaan boleh ke Netlify, Vercel, Github pages

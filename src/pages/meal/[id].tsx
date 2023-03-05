@@ -11,6 +11,7 @@ import {
 } from '@/lib/axios-request';
 import { urlSearchBuilder } from '@/lib/url-builder';
 
+import NextImage from '@/components/atomic/NextImage';
 import Seo from '@/components/atomic/Seo';
 import BlogLayout from '@/components/organism/LayoutBlog';
 
@@ -56,6 +57,26 @@ export default function MealDetailPage({ meal }: { meal: Meal }) {
           noCookie={true}
         />
       </div> */}
+
+      <NextImage
+        useSkeleton
+        loading='lazy'
+        className='h-full w-full object-cover object-center'
+        iconFallbackClassName='h-full w-full'
+        width={360}
+        height={360}
+        src={processedMeal.strMealThumb ?? ''}
+        alt={processedMeal.strMeal ?? 'Meal Picture'}
+      />
+      <p>{processedMeal.strInstructions}</p>
+      <ul>
+        {strCook &&
+          strCook.map((value, index) => (
+            <li
+              key={`stringredient-${index}`}
+            >{`${value.strMeasure} ${value.strIngredient}`}</li>
+          ))}
+      </ul>
       <div
         className='video-responsive min-h-[360px] w-full'
         onClick={() => {
@@ -76,15 +97,6 @@ export default function MealDetailPage({ meal }: { meal: Meal }) {
           </div>
         )}{' '}
       </div>
-      <p>{processedMeal.strInstructions}</p>
-      <ul>
-        {strCook &&
-          strCook.map((value, index) => (
-            <li
-              key={`stringredient-${index}`}
-            >{`${value.strMeasure} ${value.strIngredient}`}</li>
-          ))}
-      </ul>
     </BlogLayout>
   );
 }
