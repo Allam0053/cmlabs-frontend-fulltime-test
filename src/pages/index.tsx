@@ -19,6 +19,7 @@ import {
 } from '@/lib/axios-request';
 import clsxm from '@/lib/clsxm';
 import useFetchIngredient from '@/hooks/useFetchIngredient';
+import { useIngredientPointerDispatch } from '@/hooks/useIngredientPointer';
 import useMealCountByIngredient from '@/hooks/useMealCountByIngredient';
 import usePagination from '@/hooks/usePagination';
 import useSearch from '@/hooks/useSearch';
@@ -61,6 +62,7 @@ export default function HomePage({
   meals: number;
 }) {
   const { data } = useFetchIngredient();
+  const dispatchIngredient = useIngredientPointerDispatch();
 
   const {
     searchMethod,
@@ -253,6 +255,9 @@ export default function HomePage({
                                 <Typography variant='h6'>
                                   <UnstyledLink
                                     href={`/ingredient/${ingredient.ingredient.strIngredient}`}
+                                    onClick={() =>
+                                      dispatchIngredient(ingredient)
+                                    }
                                     className='mt-0 mb-4 font-medium leading-normal text-gray-800'
                                   >
                                     <span

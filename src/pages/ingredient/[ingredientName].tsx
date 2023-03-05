@@ -13,6 +13,7 @@ import { InView } from 'react-intersection-observer';
 
 import clsxm from '@/lib/clsxm';
 import useFetchMeal from '@/hooks/useFetchMeal';
+import { useIngredientPointerState } from '@/hooks/useIngredientPointer';
 import usePagination from '@/hooks/usePagination';
 import useSearch from '@/hooks/useSearch';
 
@@ -34,6 +35,7 @@ export default function MealsByIngredientPage() {
   const router = useRouter();
   const { ingredientName } = router.query;
   const { data } = useFetchMeal(ingredientName?.toString());
+  const pointedIngredient = useIngredientPointerState();
 
   const {
     searchMethod,
@@ -53,7 +55,7 @@ export default function MealsByIngredientPage() {
   return (
     <Layout>
       <Seo />
-      <main className='flex h-full w-full flex-col items-center'>
+      <main className='flex h-full w-full flex-col items-center pb-12'>
         <InView triggerOnce rootMargin='-40% 0px'>
           {({ ref, inView }) => (
             <section
@@ -93,10 +95,33 @@ export default function MealsByIngredientPage() {
                       data-moveup
                     />
                     <div
-                      className='mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-white p-3 text-center text-slate-500 shadow-lg'
+                      className='mb-6 inline-flex h-16 w-16 items-center justify-center overflow-hidden rounded-full bg-white p-3 text-center text-slate-500 shadow-lg'
                       data-fade='7'
                     >
-                      <i className='fas fa-burger text-xl'></i>
+                      {pointedIngredient &&
+                      pointedIngredient.ingredient &&
+                      pointedIngredient.ingredient.idIngredient &&
+                      pointedIngredient.image ? (
+                        <NextImage
+                          useSkeleton
+                          loading='lazy'
+                          className='h-full w-full object-cover object-center'
+                          iconFallbackClassName='h-full w-full'
+                          width={360}
+                          height={360}
+                          src={pointedIngredient.image}
+                          alt={
+                            pointedIngredient.ingredient.strIngredient ===
+                              null ||
+                            pointedIngredient.ingredient.strIngredient ===
+                              undefined
+                              ? pointedIngredient.ingredient.idIngredient
+                              : pointedIngredient.ingredient.strIngredient
+                          }
+                        />
+                      ) : (
+                        <i className='fas fa-burger text-xl'></i>
+                      )}
                     </div>
                     <h3
                       className='mb-2 text-3xl font-semibold leading-normal'
@@ -104,26 +129,22 @@ export default function MealsByIngredientPage() {
                     >
                       Meals by Ingredient {`(${ingredientName})`}
                     </h3>
+
                     <p
-                      className='mt-4 mb-4 text-lg font-light leading-relaxed text-slate-600'
+                      className='mt-4 mb-4 text-sm font-light leading-relaxed text-slate-600'
                       data-fade='8'
                     >
-                      In addition to our recipe database, we also provide
-                      tutorials and cooking tips to help you create the perfect
-                      dish. Our team of experienced chefs and cooking
-                      enthusiasts is constantly creating new tutorials and
-                      videos to help you improve your cooking skills and
-                      discover new techniques.
+                      {pointedIngredient &&
+                        pointedIngredient.ingredient &&
+                        pointedIngredient.ingredient.idIngredient &&
+                        `${pointedIngredient.ingredient.strDescription} (id:${pointedIngredient.ingredient.idIngredient})`}
                     </p>
                     <p
-                      className='mt-4 mb-4 text-lg font-light leading-relaxed text-slate-600'
+                      className='mt-4 mb-4 text-sm font-light leading-relaxed text-slate-600'
                       data-fade='8'
                     >
-                      So whether you're a seasoned home cook or just starting
-                      out, our recipe database and tutorials are the perfect
-                      resources to help you create delicious, satisfying meals
-                      that you and your family will love. Explore our website
-                      today to discover a world of delicious possibilities! 🍸
+                      do you use routing or clicking your way throught to get
+                      here ? never mind let's drink 🍸
                     </p>
                     <form className='flex flex-col gap-4 lg:flex-row'>
                       <StyledInput

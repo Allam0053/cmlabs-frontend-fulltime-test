@@ -7,6 +7,7 @@ import '@/styles/colors.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import { IngredientStateProvider } from '@/hooks/useIngredient';
+import { IngredientPointerStateProvider } from '@/hooks/useIngredientPointer';
 import { MealStateProvider } from '@/hooks/useMeal';
 
 /**
@@ -18,7 +19,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <IngredientStateProvider>
       <MealStateProvider>
-        <Component {...pageProps} />
+        <IngredientPointerStateProvider>
+          <Component {...pageProps} />
+        </IngredientPointerStateProvider>
       </MealStateProvider>
     </IngredientStateProvider>
   );

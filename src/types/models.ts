@@ -12,6 +12,11 @@ export type Ingredient = {
   strDescription: NullableString;
   strType: NullableString;
 };
+
+export type IngredientUnit = {
+  ingredient: Ingredient;
+  image?: string;
+};
 export type IngredientsWithImage = {
   ingredient: Ingredient;
   image: string;
