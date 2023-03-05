@@ -2,13 +2,17 @@ import lodashGet from 'lodash/get';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next/types';
 import React from 'react';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
 import useSWR from 'swr';
 
-import { fetchAndHandleMealDetail } from '@/lib/axios-request';
+import {
+  fetchAndHandleMealDetail,
+  fetchAndHandleMealDetailClient,
+} from '@/lib/axios-request';
 import { urlSearchBuilder } from '@/lib/url-builder';
 
 import Seo from '@/components/atomic/Seo';
-import Layout from '@/components/organism/Layout';
+import BlogLayout from '@/components/organism/LayoutBlog';
 
 import { DETAIL_MEAL } from '@/services/endpoints';
 
@@ -21,7 +25,7 @@ export default function MealDetailPage({ meal }: { meal: Meal }) {
       DETAIL_MEAL,
       new Map([['i', (router.query.id ?? '').toString()]])
     ),
-    fetchAndHandleMealDetail
+    fetchAndHandleMealDetailClient
   );
   const processedMeal = React.useMemo(() => {
     return meal ?? dataSWR;
@@ -31,7 +35,7 @@ export default function MealDetailPage({ meal }: { meal: Meal }) {
     return getStrCook(meal);
   }, [meal]);
   return (
-    <Layout>
+    <BlogLayout>
       <Seo
         templateTitle={
           processedMeal.strMeal === null ? undefined : processedMeal.strMeal
@@ -41,36 +45,52 @@ export default function MealDetailPage({ meal }: { meal: Meal }) {
           processedMeal.dateModified ?? '01/01/2023'
         ).toISOString()}
       />
-      <main>
-        <section>
-          <h1>{processedMeal.strMeal}</h1>
-          <p>{processedMeal.strInstructions}</p>
-          <ul>
-            {strCook &&
-              strCook.map((value, index) => (
-                <li
-                  key={`stringredient-${index}`}
-                >{`${value.strMeasure} ${value.strIngredient}`}</li>
-              ))}
-          </ul>
 
-          <iframe
-            className='h-full w-full'
-            src={
-              processedMeal.strYoutube === null
-                ? undefined
-                : processedMeal.strYoutube
-            }
-            title={
-              processedMeal.strMeal === null ? undefined : processedMeal.strMeal
-            }
-            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-            allowFullScreen
-          ></iframe>
-        </section>
-      </main>
-    </Layout>
+      <h1>{processedMeal.strMeal}</h1>
+      {/* <div className='not-prose h-full w-full overflow-hidden'>
+        <LiteYouTubeEmbed
+          id={getYoutubeId(processedMeal.strYoutube) ?? ''}
+          poster='maxresdefault'
+          title={processedMeal.strMeal ?? 'recipes'}
+          style={{ innerHeight: '315px', height: '315px' }}
+          noCookie={true}
+        />
+      </div> */}
+      <div
+        className='video-responsive min-h-[360px] w-full'
+        onClick={() => {
+          const element = document.querySelector('.yt-lite');
+          if (element instanceof HTMLElement) {
+            element.click();
+          }
+        }}
+      >
+        {getYoutubeId(processedMeal.strYoutube) && (
+          <div className='not-prose h-full w-full overflow-hidden'>
+            <LiteYouTubeEmbed
+              id={getYoutubeId(processedMeal.strYoutube) ?? ''}
+              poster='default'
+              title={processedMeal.strMeal ?? 'recipes'}
+              noCookie={true}
+            />
+          </div>
+        )}{' '}
+      </div>
+      <p>{processedMeal.strInstructions}</p>
+      <ul>
+        {strCook &&
+          strCook.map((value, index) => (
+            <li
+              key={`stringredient-${index}`}
+            >{`${value.strMeasure} ${value.strIngredient}`}</li>
+          ))}
+      </ul>
+    </BlogLayout>
   );
+}
+
+export function getYoutubeId(url?: string | null) {
+  return new URL(url ?? 'https://youtube.com').searchParams.get('v');
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -93,10 +113,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 function getStrCook(mealRes: Meal) {
   const strCook: { strIngredient: string; strMeasure: string }[] = [];
   for (let i = 1; i <= 20; i++) {
-    strCook.push({
-      strIngredient: lodashGet(mealRes, `strIngredient${i}`, ''),
-      strMeasure: lodashGet(mealRes, `strMeasure${i}`, ''),
-    });
+    if (
+      lodashGet(mealRes, `strIngredient${i}`, '') !== '' ||
+      lodashGet(mealRes, `strMeasure${i}`, '') !== ''
+    )
+      strCook.push({
+        strIngredient: lodashGet(mealRes, `strIngredient${i}`, ''),
+        strMeasure: lodashGet(mealRes, `strMeasure${i}`, ''),
+      });
   }
   return strCook;
 }

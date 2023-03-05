@@ -66,8 +66,8 @@ export default function NextImage({
       ) : (
         <IconFallback
           className={iconFallbackClassName}
-          width={width}
-          height={height}
+          width={20}
+          height={20}
         />
       )}
     </figure>

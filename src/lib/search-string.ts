@@ -9,6 +9,13 @@ export function getInputValueCastToArray(
     .filter(Boolean);
 }
 
+export function getSearchStringValueCastToArray(searchString: string) {
+  return searchString
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+}
+
 // time complexity too high O(ingredientLen * mealNameSplitted * searchTermSplitted)
 // good for searching uncertain reference
 export function searchFunctionForReference<T>(

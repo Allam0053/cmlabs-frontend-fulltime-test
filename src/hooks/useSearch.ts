@@ -3,7 +3,7 @@ import React from 'react';
 import {
   exactMatchSubstring,
   generateCache,
-  getInputValueCastToArray,
+  getSearchStringValueCastToArray,
   searchFunctionForReference,
 } from '@/lib/search-string';
 
@@ -11,14 +11,14 @@ import {
  * only receive deps, no args
  * @param deps
  */
-export default function useSearch<T>(deps: Array<T>) {
+export default function useSearch<T>(pathToSearch: string, deps: Array<T>) {
   const data = deps;
   const [searchMethod, setSearchMethod] = React.useState<
     'fast' | 'detail' | 'exact'
   >('exact');
-  const path = React.useMemo(() => 'ingredient.strIngredient', []);
+  const path = React.useMemo(() => pathToSearch, [pathToSearch]);
 
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  // const inputRef = React.useRef<HTMLInputElement>(null);
   const [searchTerm, setSearchTerm] = React.useState<string[]>([]);
 
   const fastSearchCache = React.useMemo(() => {
@@ -31,11 +31,9 @@ export default function useSearch<T>(deps: Array<T>) {
   }, [fastSearchCache, searchTerm]);
 
   // collect the search terms
-  const onSubmitHandler = React.useCallback<
-    React.FormEventHandler<HTMLFormElement>
-  >((e) => {
-    e.preventDefault();
-    const getInputValues = getInputValueCastToArray(inputRef);
+  const onSubmitHandler = React.useCallback((searchString: string) => {
+    // e.preventDefault();
+    const getInputValues = getSearchStringValueCastToArray(searchString);
     setSearchTerm(getInputValues);
   }, []);
 
@@ -52,7 +50,6 @@ export default function useSearch<T>(deps: Array<T>) {
     searchMethod,
     setSearchMethod,
     path,
-    inputRef,
     searchTerm,
     setSearchTerm,
     fastSearchCache,
