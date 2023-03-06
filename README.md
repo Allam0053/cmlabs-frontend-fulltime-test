@@ -1,5 +1,13 @@
 # Recipes Website
 
+how to install:
+
+[https://youtu.be/94L4ctwi5ek](https://youtu.be/94L4ctwi5ek)
+
+technical explanation:
+
+[https://youtu.be/ejaVJFgBlOE](https://youtu.be/ejaVJFgBlOE)
+
 ## Getting Started
 
 ### 1. Install dependencies
